@@ -15,6 +15,20 @@
     <input type="file" id="image" name="image" accept="image/*" required>
     <button type="submit">Upload</button>
   </form>
+
+  <h2>Existing Images</h2>
+  <div class="image-grid">
+    <% images.forEach(image => { %>
+      <div class="image-item">
+        <img src="/uploads/<%= image.filename %>" alt="<%= image.title %>">
+        <p><%= image.title %></p>
+        <form action="/admin/delete/<%= image.id %>" method="POST">
+          <button type="submit" class="delete-btn">Delete</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+
   <a href="/">Back to Voting</a>
 </body>
 </html>

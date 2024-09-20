@@ -39,7 +39,13 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/upload', isAuthenticated, (req, res) => {
-  res.render('admin/upload');
+  db.all('SELECT * FROM images', [], (err, images) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error fetching images');
+    }
+    res.render('admin/upload', { images });
+  });
 });
 
 router.post('/upload', isAuthenticated, upload.single('image'), (req, res) => {
@@ -52,6 +58,50 @@ router.post('/upload', isAuthenticated, upload.single('image'), (req, res) => {
       return res.status(500).send('Error uploading image');
     }
     res.redirect('/');
+  });
+});
+
+router.post('/delete/:id', isAuthenticated, (req, res) => {
+  const imageId = req.params.id;
+
+  db.get('SELECT filename FROM images WHERE id = ?', [imageId], (err, row) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Error fetching image');
+    }
+
+    if (!row) {
+      return res.status(404).send('Image not found');
+    }
+
+    const filename = row.filename;
+    const filePath = path.join(uploadsDir, filename);
+
+    // Delete the file from the uploads directory
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error deleting image file');
+      }
+
+      // Delete the image record from the database
+      db.run('DELETE FROM images WHERE id = ?', [imageId], (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send('Error deleting image from database');
+        }
+
+        // Delete associated votes
+        db.run('DELETE FROM votes WHERE image_id = ?', [imageId], (err) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send('Error deleting associated votes');
+          }
+
+          res.redirect('/admin/upload');
+        });
+      });
+    });
   });
 });
 

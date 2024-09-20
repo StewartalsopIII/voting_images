@@ -89,3 +89,16 @@ a:hover {
 .result-item p {
   margin: 5px 0;
 }
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
