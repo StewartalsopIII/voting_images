@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Voting</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <h1>Vote for your favorite image</h1>
+  <form action="/vote" method="POST">
+    <div class="image-grid">
+      <% images.forEach(image => { %>
+        <div class="image-item">
+          <img src="/uploads/<%= image.filename %>" alt="<%= image.title %>">
+          <p><%= image.title %></p>
+          <input type="radio" name="imageId" value="<%= image.id %>" required>
+        </div>
+      <% }) %>
+    </div>
+    
+    <button type="submit">Vote</button>
+  </form>
+  <a href="/results">View Results</a>
+</body>
+</html>

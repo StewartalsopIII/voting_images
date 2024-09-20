@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voting Results</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <h1>Voting Results</h1>
+  <div class="results-grid">
+    <% results.forEach(result => { %>
+      <div class="result-item">
+        <img src="/uploads/<%= result.filename %>" alt="<%= result.title %>">
+        <p><%= result.title %></p>
+        <p><strong><%= result.votes %> vote<%= result.votes !== 1 ? 's' : '' %></strong></p>
+      </div>
+    <% }) %>
+  </div>
+  <a href="/">Back to Voting</a>
+</body>
+</html>
